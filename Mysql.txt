@@ -1,0 +1,63 @@
+
+MariaDB [(none)]> use abc;
+Database changed
+MariaDB [abc]> create table xyz(
+    -> id int not null primary key auto_increment,
+    -> name varchar(200) not null,
+    -> teacher_name varchar(100) not null,
+    -> batch varchar(100) default "accp prime",
+    -> age int check (age<15) );
+Query OK, 0 rows affected (0.179 sec)
+
+MariaDB [abc]> describe xyz;
++--------------+--------------+------+-----+------------+----------------+
+| Field        | Type         | Null | Key | Default    | Extra          |
++--------------+--------------+------+-----+------------+----------------+
+| id           | int(11)      | NO   | PRI | NULL       | auto_increment |
+| name         | varchar(200) | NO   |     | NULL       |                |
+| teacher_name | varchar(100) | NO   |     | NULL       |                |
+| batch        | varchar(100) | YES  |     | accp prime |                |
+| age          | int(11)      | YES  |     | NULL       |                |
++--------------+--------------+------+-----+------------+----------------+
+5 rows in set (0.028 sec)
+
+MariaDB [abc]> delimiter //
+MariaDB [abc]> create procedure insertdata(
+    -> txtname varchar(100),
+    -> txtteacher_name varchar(100),
+    -> txtage int
+    -> )
+    -> begin
+    -> insert into xyz(id,name,teacher_name,age) values (null,txtname,txtteacher_name,txtage); select * from xyz;
+    -> end //
+Query OK, 0 rows affected (0.142 sec)
+
+MariaDB [abc]> call insertdata('shazil','hammad',14)//
++----+--------+--------------+------------+------+
+| id | name   | teacher_name | batch      | age  |
++----+--------+--------------+------------+------+
+|  1 | shazil | hammad       | accp prime |   14 |
++----+--------+--------------+------------+------+
+1 row in set (0.135 sec)
+
+Query OK, 1 row affected (0.144 sec)
+
+MariaDB [abc]> delimiter //
+MariaDB [abc]> create procedure select_student(
+    -> )
+    -> begin
+    -> select * from xyz;
+    -> end //
+Query OK, 0 rows affected (0.120 sec)
+
+MariaDB [abc]> call select_student //
++----+--------+--------------+------------+------+
+| id | name   | teacher_name | batch      | age  |
++----+--------+--------------+------------+------+
+|  1 | shazil | hammad       | accp prime |   14 |
++----+--------+--------------+------------+------+
+1 row in set (0.001 sec)
+
+Query OK, 0 rows affected (0.005 sec)
+
+MariaDB [abc]>
